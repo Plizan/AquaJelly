@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4016665388106443162}
   - component: {fileID: 4016665388106443163}
   - component: {fileID: 4016665388106443161}
+  - component: {fileID: 7568946327806663228}
   m_Layer: 0
   m_Name: Jelly
   m_TagString: Jelly
@@ -95,5 +96,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d8db8787f0ce3b47a5a264e8ca66a12, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  game: {fileID: 0}
   speed: 15
+  score: 25
+--- !u!58 &7568946327806663228
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4016665388106443236}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.09

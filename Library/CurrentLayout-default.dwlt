@@ -142,10 +142,10 @@ MonoBehaviour:
     y: 30
     width: 3440
     height: 1307
-  m_MinSize: {x: 911, y: 392}
-  m_MaxSize: {x: 22006, y: 14042}
+  m_MinSize: {x: 910, y: 392}
+  m_MaxSize: {x: 22005, y: 14042}
   vertical: 1
-  controlID: 21
+  controlID: 37
 --- !u!114 &7
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -169,10 +169,10 @@ MonoBehaviour:
     y: 0
     width: 3440
     height: 976
-  m_MinSize: {x: 911, y: 271}
-  m_MaxSize: {x: 22006, y: 10021}
+  m_MinSize: {x: 910, y: 271}
+  m_MaxSize: {x: 22005, y: 10021}
   vertical: 0
-  controlID: 22
+  controlID: 38
 --- !u!114 &8
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -273,8 +273,8 @@ MonoBehaviour:
     y: 0
     width: 1003
     height: 976
-  m_MinSize: {x: 276, y: 71}
-  m_MaxSize: {x: 4001, y: 4021}
+  m_MinSize: {x: 275, y: 50}
+  m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 19}
   m_Panes:
   - {fileID: 19}
@@ -458,9 +458,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: 2.2994356, y: 0.62400126, z: 3.1329277}
+    m_Target: {x: 10.040036, y: 0.8414884, z: -1.1049602}
     speed: 2
-    m_Value: {x: 2.2994356, y: 0.62400126, z: 3.1329277}
+    m_Value: {x: 10.040036, y: 0.8414884, z: -1.1049602}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -511,9 +511,9 @@ MonoBehaviour:
     speed: 2
     m_Value: {x: 0, y: 0, z: 0, w: 1}
   m_Size:
-    m_Target: 12.187101
+    m_Target: 10.306658
     speed: 2
-    m_Value: 12.187101
+    m_Value: 10.306658
   m_Ortho:
     m_Target: 1
     speed: 2
@@ -593,7 +593,7 @@ MonoBehaviour:
       scrollPos: {x: 0, y: 0}
       m_SelectedIDs: 
       m_LastClickedID: 0
-      m_ExpandedIDs: 6ca9ffffaaa9ffffcea9ffffc8faffff5afbffff
+      m_ExpandedIDs: d855ffffc656ffff7e5affff925affff4cabffff36aeffffaeaeffffd4bbffff66bfffffc4c0ffff7cc1ffff0ac9ffffb0caffffc6caffff4ed6ffff72deffffa6e8ffff32e9ffffa0ecffff32f0ffff12f5ffff68f5ffff46f8ffffd0fafffff4fffffffa3b0000143c0000f04a0000a4500000ae500000c2500000cc500000b8530000da570000345b0000305d0000
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -655,20 +655,20 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Scenes
+    - Assets/Prefab
     m_Globs: []
   m_ViewMode: 0
   m_StartGridSize: 64
   m_LastFolders: []
   m_LastFoldersGridSize: -1
-  m_LastProjectPath: C:\Users\mydre\Documents\AquaJelly
+  m_LastProjectPath: C:\Users\mydre\Documents\GitHub\AquaJelly
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 122d0000
     m_LastClickedID: 11538
-    m_ExpandedIDs: 00000000623c0000643c0000663c0000
+    m_ExpandedIDs: 00000000783c00007a3c0000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -696,7 +696,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: b2f5ffffbef7ffffffffffff00000000623c0000
+    m_ExpandedIDs: 22c7ffffffffffff00000000783c00007a3c0000a43c0000aa3c0000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 

@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class Managers : MonoBehaviour
 {
+    public static GameObject _gameObject;
+
     private static TitleManager title;
     public static TitleManager Title { get => title; set => title = value; }
 
@@ -19,6 +21,17 @@ public class Managers : MonoBehaviour
         title = GetComponent<TitleManager>();
         sound = GetComponent<SoundManager>();
 
-        DontDestroyOnLoad(this.gameObject);
+        _gameObject = gameObject;
+        DontDestroyOnLoad(_gameObject);
+    }
+
+    void OnLevelWasLoaded(int level)
+    {
+        if(level == 1)
+        {
+            GameObject gameManager = GameObject.Find("GameManager").gameObject;
+            gameManager.transform.parent = transform;
+            Managers.Game = gameManager.GetComponent<GameManager>();
+        }
     }
 }

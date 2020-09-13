@@ -6,6 +6,7 @@ public enum SoundForm
 {
     BACKGROUND,
     JELLY,
+    OBJECT,
 
 }
 

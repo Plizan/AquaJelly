@@ -181,7 +181,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 12800000, guid: 90b25ba751a09ed4b8e9f72493efa7d0, type: 3}
+    m_Font: {fileID: 12800000, guid: 4c34471348ce9124ab946d4eebdb21ec, type: 3}
     m_FontSize: 131
     m_FontStyle: 0
     m_BestFit: 0
@@ -283,7 +283,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 151631775}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 592045167}
+        m_TargetAssemblyTypeName: TitleManager, Assembly-CSharp
+        m_MethodName: OnStart
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &151631775
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -517,6 +529,8 @@ GameObject:
   m_Component:
   - component: {fileID: 592045165}
   - component: {fileID: 592045166}
+  - component: {fileID: 592045167}
+  - component: {fileID: 592045168}
   m_Layer: 0
   m_Name: Managers
   m_TagString: Untagged
@@ -548,6 +562,30 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3c2f966d7a6f33846b051b620a686840, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &592045167
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 592045164}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dcf3e55fed015464091af0a0d7b65e95, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &592045168
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 592045164}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9979074bf001a104b9ec4e321f33ef2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &658982194

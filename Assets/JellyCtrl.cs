@@ -9,6 +9,8 @@ public class JellyCtrl : MonoBehaviour
 
     private void Awake()
     {
+        if (null == Managers.Game) return;
+
         speed *= Managers.Game.backgroundSpeed;
     }
 
@@ -26,9 +28,14 @@ public class JellyCtrl : MonoBehaviour
     {
         if (collision.CompareTag("Player"))
         {
-            Managers.Game.score += score;
-            Managers.Sound.Play(SoundForm.JELLY);
-            Destroy(this);
+            if (null != Managers.Game)
+            {
+                Managers.Game.Score += score;
+                Managers.Game.Health += score * 0.01f;
+                Managers.Sound.Play(SoundForm.JELLY);
+            }
+
+            Destroy(this.gameObject);
         }
     }
 }
