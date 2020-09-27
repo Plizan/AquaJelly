@@ -6,18 +6,29 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
-{   
-    public SpriteRenderer backgroundRenderer;
+{
+    [Header("UI Field")]
+    [SerializeField] private SpriteRenderer backgroundRenderer;
 
-    public TextMeshProUGUI scoreText;
-    public Image healthImage;
+    [SerializeField] private TextMeshProUGUI scoreText;
+    [SerializeField] private Image healthImage;
 
+    [SerializeField] private RectTransform panelTopGameUI;
+    [SerializeField] private RectTransform panelBottomGameUI;
+    [SerializeField] private RectTransform panelTopEndUI;
+    [SerializeField] private RectTransform panelBottomEndUI;
+
+    [Header("Game Info")]
+    [SerializeField] private int score;
+    public int Score { get => score; set { score = value; scoreText.text = score.ToString(); } }
+
+    [Header("Player Info")]
     [SerializeField] private float maxHealth;
     [SerializeField] private float health;
-    public float Health { get => health; set{ health = Mathf.Min(value, maxHealth); healthImage.fillAmount = health / maxHealth; } }
+    [SerializeField] private int level;
 
-    [SerializeField]private int score;
-    public int Score { get => score; set { score = value; scoreText.text = score.ToString(); } }
+    public float Health { get => health; set { health = Mathf.Min(value, maxHealth); healthImage.fillAmount = health / maxHealth; } }
+
 
     public float backgroundSpeed = 1f;
 
@@ -31,6 +42,9 @@ public class GameManager : MonoBehaviour
     {
         backgroundOffset = 0f;
         health = maxHealth;
+
+        panelTopEndUI.position = new Vector2(0, Screen.height / 2);
+        panelBottomEndUI.position = new Vector2(0, Screen.height / 2 * -1);
     }
 
     private void Update()
@@ -41,12 +55,23 @@ public class GameManager : MonoBehaviour
 
         Health -= Time.deltaTime;
 
-        if (health < 0) GameEnd();
+        if (health < 0 && !isEnding) StartCoroutine(GameEndCoroutine());
     }
 
-    private void GameEnd()
+    bool isEnding = false;
+    IEnumerator GameEndCoroutine()
     {
+        isEnding = true;
+
         Destroy(Managers._gameObject);
-        SceneManager.LoadScene(0);
+
+        for (float f = 0; f < Mathf.PI; f += Time.deltaTime * 0.05f)
+        {
+            panelTopGameUI.position = new Vector2(0, Mathf.Sin(f) * Screen.height / 2);
+            panelBottomGameUI.position = new Vector2(0, Mathf.Sin(f) * Screen.height / 2 * -1);
+            panelTopEndUI.position = new Vector2(0, Mathf.Sin(Mathf.PI - f) * Screen.height / 2);
+            panelBottomEndUI.position = new Vector2(0, Mathf.Sin(Mathf.PI - f) * Screen.height / 2 * -1);
+            yield return null;
+        }
     }
 }
