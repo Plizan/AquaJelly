@@ -6,15 +6,20 @@ using UnityEngine.UI;
 public class UIManager : MonoBehaviour
 {
     [Header("UI Field")]
+    [SerializeField] private GameObject panelLobby;
+    [SerializeField] private GameObject panelGame;
+
     public Text txtScore;
     public Image imgHealth;
 
-    public void Initialization(GameManager game)
+    public void Initialization(ProgressType progressType)
     {
-        if(txtScore)
-            txtScore.text = game.score.ToString();
+        for (int i = 0; i < panelLobby.transform.childCount; i++)
+        {
+            var animated = panelLobby.transform.GetChild(i).GetComponent<UIAnimated>();
 
-        if(imgHealth)
-            imgHealth.fillAmount = game.health / game.maxHealth;
+            if (animated is null) panelLobby.transform.GetChild(i).gameObject.SetActive(false);
+            else animated.Initialization(progressType);
+        }
     }
 }

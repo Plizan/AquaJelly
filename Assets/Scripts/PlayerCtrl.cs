@@ -4,27 +4,31 @@ using UnityEngine;
 
 public class PlayerCtrl : MonoBehaviour
 {
-    public float power = 1f;
-    private Rigidbody2D rig;
+    [SerializeField] private float speed = 1;
+    [SerializeField] private float power = 1;
 
-    private int jumpCount = 2;
+    private Rigidbody2D _rigidbody;
+    private int jumpCount = 0;
 
     private void Awake()
     {
-        rig = GetComponent<Rigidbody2D>();
+        _rigidbody = GetComponent<Rigidbody2D>();
     }
 
-    void Update()
+    private void Update()
     {
-        if (Input.GetMouseButtonDown(0) && jumpCount > 0)
+        transform.Translate(Vector2.right * Time.deltaTime * speed);
+
+        if (Input.GetMouseButtonDown(0) && jumpCount < 2)
         {
-            jumpCount--;
-            rig.velocity = new Vector2(0, power);
+            jumpCount++;
+            _rigidbody.velocity = Vector2.up * power;
         }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.transform.CompareTag("Floor")) jumpCount = 2;
+        if (collision.collider.CompareTag("Floor"))
+            jumpCount = 0;
     }
 }
