@@ -12,14 +12,28 @@ public class UIManager : MonoBehaviour
     public Text txtScore;
     public Image imgHealth;
 
-    public void Initialization(ProgressType progressType)
+    private List<UIAnimated> allUI = new List<UIAnimated>();
+
+    private void Awake()
     {
+        GetUIAnimateds(panelLobby).ForEach((i) => allUI.Add(i));
+        GetUIAnimateds(panelGame).ForEach((i) => allUI.Add(i));
+    }
+
+    private List<UIAnimated> GetUIAnimateds(GameObject obj)
+    {
+        var tempList = new List<UIAnimated>();
+
         for (int i = 0; i < panelLobby.transform.childCount; i++)
         {
-            var animated = panelLobby.transform.GetChild(i).GetComponent<UIAnimated>();
-
-            if (animated is null) panelLobby.transform.GetChild(i).gameObject.SetActive(false);
-            else animated.Initialization(progressType);
+            tempList.Add(obj.transform.GetChild(i).GetComponent<UIAnimated>());
         }
+
+        return tempList;
+    }
+
+    public void Initialization(ProgressType progressType)
+    {
+        allUI.ForEach((i) => i.Initialization(progressType));
     }
 }

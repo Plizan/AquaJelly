@@ -8,6 +8,7 @@ public class UIAnimated : MonoBehaviour
 
     private Vector2 beginningPosition;
 
+
     private void Awake()
     {
         beginningPosition = GetComponent<RectTransform>().anchoredPosition;
@@ -21,6 +22,6 @@ public class UIAnimated : MonoBehaviour
 
     public void Initialization(ProgressType progressType)
     {
-        //ToDo : 초기화 움직임
+        gameObject.SetActive(progressType == this.progressType);
     }
 }

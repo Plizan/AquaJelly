@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using DG.Tweening;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,6 +7,10 @@ public class PlayerCtrl : MonoBehaviour
 {
     [SerializeField] private float speed = 1;
     [SerializeField] private float power = 1;
+    [SerializeField] private int level;
+    public int Level { get => level; set { transform.DOScale(Vector3.one * value, Mathf.Abs(level - value)); level = Mathf.Min(value, 4); } }
+    [SerializeField] private float health;
+    public float Health { get => health; set { health = Mathf.Min(value, Managers.Game.maxHealth); Managers.UI.imgHealth.fillAmount = health / Managers.Game.maxHealth; } }
 
     private Rigidbody2D _rigidbody;
     private int jumpCount = 0;

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -24,13 +25,10 @@ public class GameManager : MonoBehaviour
     public int Score { get => score; set { score = value; Managers.UI.txtScore.text = score.ToString(); } }
 
     [Header("Player Info")]
-    [SerializeField] private GameObject player;
-
+    public PlayerCtrl playerCtrl;
     [SerializeField] private int level;
-
-    [SerializeField] float maxHealth;
-    [SerializeField] private float health;
-    public float Health { get => health; set { health = Mathf.Min(value, maxHealth); Managers.UI.imgHealth.fillAmount = health / maxHealth; } }
+    public int Level { get => level; set { level = value; playerCtrl.Level = level; } }
+    public float maxHealth;
 
     [Header("Background Field")]
     public GameObject[] backgrounds;
@@ -41,6 +39,7 @@ public class GameManager : MonoBehaviour
     {
         ProgressType = progressType;
         beginningCameraPosition = Camera.main.transform.position;
+        playerCtrl.Level = level;
     }
 
     Vector3 beginningCameraPosition;
@@ -48,17 +47,17 @@ public class GameManager : MonoBehaviour
     private void Update()
     {
         Vector3 temp = beginningCameraPosition;
-        temp.x += player.transform.position.x;
+        temp.x += playerCtrl.transform.position.x;
         Camera.main.transform.position = temp;
 
-        if (Camera.main.transform.position.x > 6.5f * (backgroundIndex + 1))
-        {
-            var pos = backgrounds[backgroundIndex % 3].transform.position;
-            pos.x += 6.5f * backgrounds.Length;
-            backgrounds[backgroundIndex % 3].transform.position = pos;
+        //if (Camera.main.transform.position.x > 6.5f * (backgroundIndex + 1))
+        //{
+        //    var pos = backgrounds[backgroundIndex % 3].transform.position;
+        //    pos.x += 6.5f * backgrounds.Length;
+        //    backgrounds[backgroundIndex % 3].transform.position = pos;
 
-            backgroundIndex++;
-        }
+        //    backgroundIndex++;
+        //}
     }
     #endregion
 }

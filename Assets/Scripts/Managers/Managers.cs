@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
+using UnityEditor;
 
 public class Managers : MonoBehaviour
 {
@@ -25,5 +26,23 @@ public class Managers : MonoBehaviour
         sound = GetComponent<SoundManager>();
         game = GetComponent<GameManager>();
         ui = GetComponent<UIManager>();
+    }
+}
+
+[CustomEditor(typeof(Managers))]
+public class Inspector : Editor
+{
+    public override void OnInspectorGUI()
+    {
+        base.OnInspectorGUI();
+
+        if (GUILayout.Button("Set Player"))
+        {
+            Managers.Game.playerCtrl.Level = Managers.Game.Level;
+        }
+        if (GUILayout.Button("Set UI"))
+        {
+            Managers.UI.Initialization(Managers.Game.ProgressType);
+        }
     }
 }
