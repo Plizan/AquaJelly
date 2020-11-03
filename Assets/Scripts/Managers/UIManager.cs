@@ -24,7 +24,7 @@ public class UIManager : MonoBehaviour
     {
         var tempList = new List<UIAnimated>();
 
-        for (int i = 0; i < panelLobby.transform.childCount; i++)
+        for (int i = 0; i < obj.transform.childCount; i++)
         {
             tempList.Add(obj.transform.GetChild(i).GetComponent<UIAnimated>());
         }

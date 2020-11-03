@@ -21,43 +21,74 @@ public class GameManager : MonoBehaviour
     [SerializeField] private ProgressType progressType;
     public ProgressType ProgressType { get => progressType; set { progressType = value; Managers.UI.Initialization(progressType); } }
 
+    public float speed;
+
     [SerializeField] private int score;
     public int Score { get => score; set { score = value; Managers.UI.txtScore.text = score.ToString(); } }
+
+    [Header("Camera Field")]
+    [SerializeField] private CameraCtrl cameraCtrl;
 
     [Header("Player Info")]
     public PlayerCtrl playerCtrl;
     [SerializeField] private int level;
+    [SerializeField] private int maxLevel = 4;
     public int Level { get => level; set { level = value; playerCtrl.Level = level; } }
     public float maxHealth;
 
     [Header("Background Field")]
-    public GameObject[] backgrounds;
+    public BackgroundCtrl backgroundCtrl;
     #endregion
 
     #region CallbackFunction
     private void Start()
     {
         ProgressType = progressType;
-        beginningCameraPosition = Camera.main.transform.position;
         playerCtrl.Level = level;
+        playerCtrl.Health = maxHealth / (maxLevel - 1) * level;
     }
 
-    Vector3 beginningCameraPosition;
-    int backgroundIndex = 0;
     private void Update()
     {
-        Vector3 temp = beginningCameraPosition;
-        temp.x += playerCtrl.transform.position.x;
-        Camera.main.transform.position = temp;
+        if (progressType == ProgressType.Game) GameUpdate();
+    }
 
-        //if (Camera.main.transform.position.x > 6.5f * (backgroundIndex + 1))
-        //{
-        //    var pos = backgrounds[backgroundIndex % 3].transform.position;
-        //    pos.x += 6.5f * backgrounds.Length;
-        //    backgrounds[backgroundIndex % 3].transform.position = pos;
+    private void GameUpdate()
+    {
+        if (Level > 1 && playerCtrl.Health < maxHealth / (maxLevel - 1) * (Level - 1))
+            Level--;
+        else if (Level < maxLevel && playerCtrl.Health > maxHealth / (maxLevel - 1) * Level)
+            Level++;
 
-        //    backgroundIndex++;
-        //}
+        playerCtrl.Health -= Time.deltaTime * 3;
+
+        Score++;
+
+        if (playerCtrl.Health <= 0) GameStop();
+    }
+
+    public void OnPlay()
+    {
+        StartCoroutine(GameStart());
+    }
+
+    private IEnumerator GameStart()
+    {
+        ProgressType = ProgressType.Game;
+        playerCtrl.Jump();
+
+        yield return new WaitForSeconds(.15f);
+        backgroundCtrl.speed = speed;
+        StartCoroutine(backgroundCtrl.Scroll());
+        StartCoroutine(cameraCtrl.CameraFollow(playerCtrl.transform));
+        StartCoroutine(playerCtrl.Movement());
+    }
+
+    private void GameStop()
+    {
+        ProgressType = ProgressType.Lobby;
+
+        StopAllCoroutines();
     }
     #endregion
 }

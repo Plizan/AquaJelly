@@ -44,5 +44,9 @@ public class Inspector : Editor
         {
             Managers.UI.Initialization(Managers.Game.ProgressType);
         }
+        if (GUILayout.Button("Set UI"))
+        {
+            Managers.Game.backgroundCtrl.speed = Managers.Game.speed;
+        }
     }
 }

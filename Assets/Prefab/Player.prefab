@@ -136,3 +136,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 2.5
   power: 5
+  level: 0
+  health: 0
