@@ -38,7 +38,7 @@ public class Inspector : Editor
 
         if (GUILayout.Button("Set Player"))
         {
-            Managers.Game.playerCtrl.Level = Managers.Game.Level;
+            Managers.Game.playerCtrl.Level = Managers.Game.startLevel;
         }
         if (GUILayout.Button("Set UI"))
         {

@@ -25,27 +25,32 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private int score;
     public int Score { get => score; set { score = value; Managers.UI.txtScore.text = score.ToString(); } }
+    [SerializeField] private int spawnTime;
+
+    [Header("Player Info")]
+    public int startLevel;
+    public int maxLevel = 4;
+    
+    public float maxHealth;
+    [Header("Player Field")]
+    public PlayerCtrl playerCtrl;
 
     [Header("Camera Field")]
     [SerializeField] private CameraCtrl cameraCtrl;
 
-    [Header("Player Info")]
-    public PlayerCtrl playerCtrl;
-    [SerializeField] private int level;
-    [SerializeField] private int maxLevel = 4;
-    public int Level { get => level; set { level = value; playerCtrl.Level = level; } }
-    public float maxHealth;
-
     [Header("Background Field")]
     public BackgroundCtrl backgroundCtrl;
+
+    [Header("Spanwer Field")]
+    [SerializeField] private ObjectSpawner obstancleSpawner;
     #endregion
 
     #region CallbackFunction
     private void Start()
     {
         ProgressType = progressType;
-        playerCtrl.Level = level;
-        playerCtrl.Health = maxHealth / (maxLevel - 1) * level;
+
+        if (ProgressType == ProgressType.Game) GameStart();
     }
 
     private void Update()
@@ -55,16 +60,7 @@ public class GameManager : MonoBehaviour
 
     private void GameUpdate()
     {
-        if (Level > 1 && playerCtrl.Health < maxHealth / (maxLevel - 1) * (Level - 1))
-            Level--;
-        else if (Level < maxLevel && playerCtrl.Health > maxHealth / (maxLevel - 1) * Level)
-            Level++;
 
-        playerCtrl.Health -= Time.deltaTime * 3;
-
-        Score++;
-
-        if (playerCtrl.Health <= 0) GameStop();
     }
 
     public void OnPlay()
@@ -77,18 +73,24 @@ public class GameManager : MonoBehaviour
         ProgressType = ProgressType.Game;
         playerCtrl.Jump();
 
+        playerCtrl.Level = startLevel;
+        playerCtrl.Health = maxHealth / (maxLevel - 1) * startLevel;
+
         yield return new WaitForSeconds(.15f);
         backgroundCtrl.speed = speed;
         StartCoroutine(backgroundCtrl.Scroll());
         StartCoroutine(cameraCtrl.CameraFollow(playerCtrl.transform));
         StartCoroutine(playerCtrl.Movement());
+        StartCoroutine(playerCtrl.HealthUpdate());
+        StartCoroutine(obstancleSpawner.ObjectSpawn(spawnTime));
     }
 
-    private void GameStop()
+    public void GameStop()
     {
         ProgressType = ProgressType.Lobby;
 
         StopAllCoroutines();
+        obstancleSpawner.objectRemove();
     }
     #endregion
 }

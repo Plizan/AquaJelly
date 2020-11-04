@@ -30,7 +30,7 @@ public class JellyCtrl : MonoBehaviour
             {
                 //Managers.Game.Score += score;
                 //Managers.Game.Health += score * 0.01f;
-                Managers.Sound.Play(SoundForm.JELLY);
+                Managers.Sound.Play(SoundClip.JELLY);
             }
 
             Destroy(this.gameObject);
