@@ -5,13 +5,12 @@ using UnityEngine;
 public class ObjectSpawner : MonoBehaviour
 {
     public GameObject[] objectPrefabs;
-    
+
     List<GameObject> objects = new List<GameObject>();
-    
+
     public IEnumerator ObjectSpawn(float waitSecond)
     {
         yield return new WaitForSeconds(3);
-
 
         while (true)
         {
@@ -19,6 +18,11 @@ public class ObjectSpawner : MonoBehaviour
 
             objects.Add(Instantiate(objectPrefabs[Random.Range(0, objectPrefabs.Length)], transform.TransformPoint(Vector3.zero), Quaternion.identity));
         }
+    }
+
+    public void ObjectInstantiate()
+    {
+        objects.Add(Instantiate(objectPrefabs[Random.Range(0, objectPrefabs.Length)], transform.TransformPoint(Vector3.zero), Quaternion.identity));
     }
 
     public void objectRemove()

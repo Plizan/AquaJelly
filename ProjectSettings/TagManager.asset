@@ -7,6 +7,7 @@ TagManager:
   - Floor
   - Jelly
   - Obstacle
+  - SpawnPoint
   layers:
   - Default
   - TransparentFX
@@ -41,14 +42,17 @@ TagManager:
   - 
   - 
   m_SortingLayers:
-  - name: Background
-    uniqueID: 2142926953
-    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Background
+    uniqueID: 2142926953
+    locked: 0
   - name: Obstacle
     uniqueID: 181641023
+    locked: 0
+  - name: Player
+    uniqueID: 4021531057
     locked: 0
   - name: UI
     uniqueID: 4098909861

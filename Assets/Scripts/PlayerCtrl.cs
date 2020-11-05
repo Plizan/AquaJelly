@@ -21,11 +21,18 @@ public class PlayerCtrl : MonoBehaviour
                 Managers.Sound.Play(SoundClip.LEVELDOWN);
 
             transform.DOScale(Vector3.one * value, Mathf.Abs(level - value));
-            level = Mathf.Min(value, 4);
+
+            level = value;
         }
     }
     [SerializeField] private float health;
-    public float Health { get => health; set { health = Mathf.Min(value, Managers.Game.maxHealth); Managers.UI.imgHealth.fillAmount = health / Managers.Game.maxHealth; } }
+    public float Health { get => health; set { health = value; Managers.UI.imgHealth.fillAmount = health / Managers.Game.maxHealth; } }
+
+    public void SetLevelOrHealth(int level)
+    {
+        Level = level;
+        Health = Managers.Game.maxHealth / (Managers.Game.maxLevel - 1) * level;
+    }
 
     private Rigidbody2D rigidbody;
 
@@ -50,10 +57,15 @@ public class PlayerCtrl : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collider)
     {
+
         if (collider.CompareTag("Obstacle"))
         {
+            if (Managers.Game.isFeverTime)
+                collider.transform.parent.gameObject.AddComponent<Rigidbody2D>().velocity = Vector2.up * power * 5;
+
             var parentTra = collider.transform.parent;
             var info = parentTra.GetComponent<ObstacleInfo>();
+
             if (level < info.level) return;
 
             Health -= info.damage;
@@ -62,8 +74,19 @@ public class PlayerCtrl : MonoBehaviour
             parentTra.gameObject.layer = layer;
 
             foreach (Transform i in parentTra)
-                i.gameObject.layer = layer;
+                if (i.CompareTag("Obstacle"))
+                    i.gameObject.layer = layer;
         }
+
+        else if (collider.CompareTag("Jelly"))
+        {
+            var info = collider.GetComponent<JellyInfo>();
+            Managers.Game.Score += info.score;
+            Health += info.heal;
+        }
+
+        else if (collider.CompareTag("SpawnPoint"))
+            Managers.Game.obstancleSpawner.ObjectInstantiate();
     }
 
     public IEnumerator HealthUpdate()
@@ -85,6 +108,11 @@ public class PlayerCtrl : MonoBehaviour
             else if (Level < maxLevel && Health > maxHealth / (maxLevel - 1) * Level)
             {
                 Level++;
+
+                if (Level == maxLevel) yield return StartCoroutine(Managers.Game.FeverMode());
+
+                Debug.Log(Level);
+
                 isWait = true;
             }
 

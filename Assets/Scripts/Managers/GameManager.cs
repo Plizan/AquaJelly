@@ -5,6 +5,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public enum ProgressType
 {
@@ -27,10 +28,14 @@ public class GameManager : MonoBehaviour
     public int Score { get => score; set { score = value; Managers.UI.txtScore.text = score.ToString(); } }
     [SerializeField] private int spawnTime;
 
+    [SerializeField] private int feverTime;
+
+    public bool isFeverTime = false;
+
     [Header("Player Info")]
     public int startLevel;
     public int maxLevel = 4;
-    
+
     public float maxHealth;
     [Header("Player Field")]
     public PlayerCtrl playerCtrl;
@@ -42,7 +47,11 @@ public class GameManager : MonoBehaviour
     public BackgroundCtrl backgroundCtrl;
 
     [Header("Spanwer Field")]
-    [SerializeField] private ObjectSpawner obstancleSpawner;
+    public ObjectSpawner obstancleSpawner;
+
+    [Header("Fever Field")]
+    [SerializeField] private GameObject backFeverObj;
+    [SerializeField] private GameObject frontFeverObj;
     #endregion
 
     #region CallbackFunction
@@ -73,8 +82,7 @@ public class GameManager : MonoBehaviour
         ProgressType = ProgressType.Game;
         playerCtrl.Jump();
 
-        playerCtrl.Level = startLevel;
-        playerCtrl.Health = maxHealth / (maxLevel - 1) * startLevel;
+        playerCtrl.SetLevelOrHealth(startLevel);
 
         yield return new WaitForSeconds(.15f);
         backgroundCtrl.speed = speed;
@@ -82,7 +90,7 @@ public class GameManager : MonoBehaviour
         StartCoroutine(cameraCtrl.CameraFollow(playerCtrl.transform));
         StartCoroutine(playerCtrl.Movement());
         StartCoroutine(playerCtrl.HealthUpdate());
-        StartCoroutine(obstancleSpawner.ObjectSpawn(spawnTime));
+        //StartCoroutine(obstancleSpawner.ObjectSpawn(spawnTime));
     }
 
     public void GameStop()
@@ -91,6 +99,34 @@ public class GameManager : MonoBehaviour
 
         StopAllCoroutines();
         obstancleSpawner.objectRemove();
+    }
+
+    public IEnumerator FeverMode()
+    {
+        isFeverTime = true;
+
+        backFeverObj.SetActive(true);
+        frontFeverObj.SetActive(true);
+
+        backFeverObj.transform.DOShakePosition(feverTime);
+        frontFeverObj.transform.DOShakePosition(feverTime);
+
+        for (float f = feverTime; f >= 0; f -= Time.deltaTime)
+        {
+            Managers.UI.imgHealth.fillAmount = f / feverTime;
+
+            yield return null;
+        }
+
+        backFeverObj.SetActive(false);
+        frontFeverObj.SetActive(false);
+
+        obstancleSpawner.objectRemove();
+        obstancleSpawner.ObjectInstantiate();
+
+        playerCtrl.SetLevelOrHealth(maxLevel - 2);
+
+        isFeverTime = false;
     }
     #endregion
 }
