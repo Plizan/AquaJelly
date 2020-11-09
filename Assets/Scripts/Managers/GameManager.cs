@@ -84,6 +84,8 @@ public class GameManager : MonoBehaviour
 
         playerCtrl.SetLevelOrHealth(startLevel);
 
+        obstancleSpawner.ObjectInstantiate();
+
         yield return new WaitForSeconds(.15f);
         backgroundCtrl.speed = speed;
         StartCoroutine(backgroundCtrl.Scroll());
