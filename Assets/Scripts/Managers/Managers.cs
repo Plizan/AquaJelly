@@ -36,17 +36,9 @@ public class Inspector : Editor
     {
         base.OnInspectorGUI();
 
-        if (GUILayout.Button("Set Player"))
-        {
-            Managers.Game.playerCtrl.Level = Managers.Game.startLevel;
-        }
-        if (GUILayout.Button("Set UI"))
-        {
-            Managers.UI.Initialization(Managers.Game.ProgressType);
-        }
-        if (GUILayout.Button("Set UI"))
-        {
-            Managers.Game.backgroundCtrl.speed = Managers.Game.speed;
-        }
+        if (GUILayout.Button("Set Player")) Managers.Game.SetPlayer();
+        if (GUILayout.Button("Set UI")) Managers.UI.Initialization(Managers.Game.ProgressType);
+        if (GUILayout.Button("Set Background")) Managers.Game.SetBackground();
+        if (GUILayout.Button("Set Camera")) Managers.Game.SetCamera();
     }
 }

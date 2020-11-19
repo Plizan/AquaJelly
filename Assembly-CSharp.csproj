@@ -56,33 +56,34 @@
     <Analyzer Include="C:\Program Files (x86)\Microsoft Visual Studio Tools for Unity\16.0\Analyzers\Microsoft.Unity.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Resources\Asset\Cartoon FX\Demo\Assets\CFX_Demo_Translate.cs" />
     <Compile Include="Assets\Scripts\ObjectSpawner.cs" />
     <Compile Include="Assets\Scripts\CameraCtrl.cs" />
     <Compile Include="Assets\Scripts\AnimationButton.cs" />
+    <Compile Include="Assets\Resources\Asset\Cartoon FX\Demo\Assets\CFX_AutoStopLoopedEffect.cs" />
     <Compile Include="Assets\Scripts\ObstacleInfo.cs" />
+    <Compile Include="Assets\Resources\Asset\Cartoon FX\Scripts\CFX_ShurikenThreadFix.cs" />
     <Compile Include="Assets\Scripts\PlayerCtrl.cs" />
     <Compile Include="Assets\Scripts\JellySpawner.cs" />
-    <Compile Include="Assets\Scripts\Managers\GameManager.cs" />
-    <Compile Include="Assets\Scripts\JellyInfo.cs" />
-    <Compile Include="Assets\Scripts\Managers\SoundManager.cs" />
-    <Compile Include="Assets\Scripts\BackgroundCtrl.cs" />
-    <Compile Include="Assets\Scripts\ObjectCtrl.cs" />
-    <Compile Include="Assets\Scripts\Managers\Managers.cs" />
-    <Compile Include="Assets\Scripts\Managers\UIManager.cs" />
-    <Compile Include="Assets\Scripts\Managers\TitleManager.cs" />
-    <Compile Include="Assets\Scripts\UIAnimated.cs" />
-    <Compile Include="Assets\Resources\Asset\Cartoon FX\Demo\Assets\CFX_Demo_Translate.cs" />
-    <Compile Include="Assets\Resources\Asset\Cartoon FX\Demo\Assets\CFX_AutoStopLoopedEffect.cs" />
-    <Compile Include="Assets\Resources\Asset\Cartoon FX\Scripts\CFX_ShurikenThreadFix.cs" />
     <Compile Include="Assets\Resources\Asset\Cartoon FX\Scripts\CFX_InspectorHelp.cs" />
     <Compile Include="Assets\Resources\Asset\Cartoon FX\Demo\Assets\CFX_Demo_RotateCamera.cs" />
+    <Compile Include="Assets\Scripts\Managers\GameManager.cs" />
     <Compile Include="Assets\Resources\Asset\Cartoon FX\Scripts\CFX_AutodestructWhenNoChildren.cs" />
     <Compile Include="Assets\Resources\Asset\Cartoon FX\Scripts\CFX_AutoDestructShuriken.cs" />
     <Compile Include="Assets\Resources\Asset\ToonFX\Demo\ToonFXSceneSelect.cs" />
     <Compile Include="Assets\Resources\Asset\Cartoon FX\Scripts\CFX_LightIntensityFade.cs" />
+    <Compile Include="Assets\Scripts\JellyInfo.cs" />
     <Compile Include="Assets\Resources\Asset\Cartoon FX\Demo\Assets\CFX_Demo_New.cs" />
+    <Compile Include="Assets\Scripts\Managers\SoundManager.cs" />
+    <Compile Include="Assets\Scripts\BackgroundCtrl.cs" />
+    <Compile Include="Assets\Scripts\ObjectCtrl.cs" />
     <Compile Include="Assets\Resources\Asset\ToonFX\Demo\MobileToonFXSceneSelect.cs" />
+    <Compile Include="Assets\Scripts\Managers\Managers.cs" />
+    <Compile Include="Assets\Scripts\Managers\UIManager.cs" />
     <Compile Include="Assets\Resources\Asset\Cartoon FX\Spawn System\CFX_SpawnSystem.cs" />
+    <Compile Include="Assets\Scripts\Managers\TitleManager.cs" />
+    <Compile Include="Assets\Scripts\UIAnimated.cs" />
+    <Compile Include="Assets\Scripts\ThrowObstacle.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

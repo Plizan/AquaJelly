@@ -10,6 +10,28 @@ public class BackgroundCtrl : MonoBehaviour
 
     [HideInInspector] public float speed = 1;
 
+    private Sprite[,] sprites = null;
+        
+    private void Awake()
+    {
+        LoadBackground();
+    }
+
+    private void LoadBackground()
+    {
+        sprites = new Sprite[Managers.Game.maxLevel, 5];    
+
+        for(int i = 0; i < Managers.Game.maxLevel; i++)
+        {
+            
+        }
+    }
+
+    public void SetBackgoundLevel(int level)
+    {
+        
+    }
+
     public IEnumerator Scroll()
     {
         while (true)

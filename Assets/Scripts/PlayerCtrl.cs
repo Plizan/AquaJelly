@@ -7,9 +7,18 @@ using UnityEngine;
 
 public class PlayerCtrl : MonoBehaviour
 {
-    [SerializeField] private float speed = 1;
-    [SerializeField] private float power = 1;
-    [SerializeField] private int level;
+    [HideInInspector] public float speed = 20;
+    [HideInInspector] public float power = 1;
+    [HideInInspector] public float maxJumpCount = 1;
+    [HideInInspector] public float dotDamage = 3;
+
+    private int level;
+
+    private SpriteRenderer _spriteRenderer;
+
+    [SerializeField] private Sprite[] sprites;
+    [SerializeField] private float animationDelay;
+
     public int Level
     {
         get => level;
@@ -34,16 +43,17 @@ public class PlayerCtrl : MonoBehaviour
         Health = Managers.Game.maxHealth / (Managers.Game.maxLevel - 1) * level;
     }
 
-    private Rigidbody2D rigidbody;
+    private Rigidbody2D _rigidbody;
 
     private void Awake()
     {
-        rigidbody = GetComponent<Rigidbody2D>();
+        _rigidbody = GetComponent<Rigidbody2D>();
+        _spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0) && jumpCount < 2 && Managers.Game.ProgressType == ProgressType.Game)
+        if (Input.GetMouseButtonDown(0) && jumpCount < maxJumpCount && Managers.Game.ProgressType == ProgressType.Game)
         {
             Jump();
         }
@@ -89,6 +99,23 @@ public class PlayerCtrl : MonoBehaviour
             Managers.Game.obstancleSpawner.ObjectInstantiate();
     }
 
+    public void Initialization(ProgressType progressType)
+    {
+        switch (progressType)
+        {
+            case ProgressType.Lobby:
+                StopAllCoroutines();
+                break;
+            case ProgressType.Game:
+                StartCoroutine(Movement());
+                StartCoroutine(Animation());
+                StartCoroutine(HealthUpdate());
+                break;
+            case ProgressType.None:
+                break;
+        }
+    }
+
     public IEnumerator HealthUpdate()
     {
         float maxHealth = Managers.Game.maxHealth;
@@ -96,7 +123,7 @@ public class PlayerCtrl : MonoBehaviour
 
         while (true)
         {
-            Health -= Time.deltaTime * 3;
+            Health -= Time.deltaTime * dotDamage;
 
             bool isWait = false;
 
@@ -110,8 +137,6 @@ public class PlayerCtrl : MonoBehaviour
                 Level++;
 
                 if (Level == maxLevel) yield return StartCoroutine(Managers.Game.FeverMode());
-
-                Debug.Log(Level);
 
                 isWait = true;
             }
@@ -136,10 +161,25 @@ public class PlayerCtrl : MonoBehaviour
         }
     }
 
+    private IEnumerator Animation()
+    {
+        uint i = 0;
+
+        while (true)
+        {
+            var value = ++i % sprites.Length;
+            _spriteRenderer.sprite = sprites[value];
+            if (value == 0 && jumpCount == 0)
+                _rigidbody.velocity = Vector2.up * power / 3;
+
+            yield return new WaitForSeconds(animationDelay);
+        }
+    }
+
     int jumpCount = 0;
     public void Jump()
     {
         jumpCount++;
-        rigidbody.velocity = Vector2.up * power;
+        _rigidbody.velocity = Vector2.up * power;
     }
 }

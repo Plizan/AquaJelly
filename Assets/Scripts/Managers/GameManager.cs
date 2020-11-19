@@ -22,7 +22,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private ProgressType progressType;
     public ProgressType ProgressType { get => progressType; set { progressType = value; Managers.UI.Initialization(progressType); } }
 
-    public float speed;
+    public float backgroundSpeed;
 
     [SerializeField] private int score;
     public int Score { get => score; set { score = value; Managers.UI.txtScore.text = score.ToString(); } }
@@ -33,15 +33,24 @@ public class GameManager : MonoBehaviour
     public bool isFeverTime = false;
 
     [Header("Player Info")]
-    public int startLevel;
     public int maxLevel = 4;
-
     public float maxHealth;
+
+    [SerializeField] private int startLevel;
+    [SerializeField] private float playerSpeed;
+    [SerializeField] private int playerJumpCount;
+    [SerializeField] private float playerJumpPower;
+    [SerializeField] private float playerDotDamage;
+
+    [Header("Camera Info")]
+    [Range(-3, 3)] public float cameraXValue = 0f;
+    //public float cameraSpeed = 1f;
+
     [Header("Player Field")]
     public PlayerCtrl playerCtrl;
 
     [Header("Camera Field")]
-    [SerializeField] private CameraCtrl cameraCtrl;
+    public CameraCtrl cameraCtrl;
 
     [Header("Background Field")]
     public BackgroundCtrl backgroundCtrl;
@@ -67,6 +76,45 @@ public class GameManager : MonoBehaviour
         if (progressType == ProgressType.Game) GameUpdate();
     }
 
+    private void Initialization(ProgressType progressType)
+    {
+        ProgressType = progressType;
+
+        switch (progressType)
+        {
+            case ProgressType.Game:
+                {
+                    SetPlayer();
+                    SetCamera();
+                    SetBackground();
+                    return;
+                }
+            case ProgressType.Lobby:
+                {
+                    return;
+                }
+        }
+    }
+
+    public void SetPlayer()
+    {
+        playerCtrl.Level = startLevel;
+        playerCtrl.speed = playerSpeed;
+        playerCtrl.power = playerJumpPower;
+        playerCtrl.maxJumpCount = playerJumpCount;
+        playerCtrl.dotDamage = playerDotDamage;
+    }
+
+    public void SetCamera()
+    {
+        cameraCtrl.xValue = cameraXValue;
+    }
+
+    public void SetBackground()
+    {
+        backgroundCtrl.speed = backgroundSpeed;
+    }
+
     private void GameUpdate()
     {
 
@@ -79,25 +127,29 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator GameStart()
     {
-        ProgressType = ProgressType.Game;
+        Initialization(ProgressType.Game);
+
+        Camera.main.DOOrthoSize(1.777778f, .5f).SetEase(Ease.InSine);
+        yield return new WaitForSeconds(.4f);
+
         playerCtrl.Jump();
-
         playerCtrl.SetLevelOrHealth(startLevel);
-
         obstancleSpawner.ObjectInstantiate();
 
         yield return new WaitForSeconds(.15f);
-        backgroundCtrl.speed = speed;
+
+        backgroundCtrl.speed = backgroundSpeed;
         StartCoroutine(backgroundCtrl.Scroll());
         StartCoroutine(cameraCtrl.CameraFollow(playerCtrl.transform));
-        StartCoroutine(playerCtrl.Movement());
-        StartCoroutine(playerCtrl.HealthUpdate());
+        playerCtrl.Initialization(ProgressType);
         //StartCoroutine(obstancleSpawner.ObjectSpawn(spawnTime));
     }
 
     public void GameStop()
     {
         ProgressType = ProgressType.Lobby;
+
+        playerCtrl.Initialization(ProgressType);
 
         StopAllCoroutines();
         obstancleSpawner.objectRemove();
