@@ -3,13 +3,15 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-public enum SoundClip
+public enum EffectSoundClip
 {
-    BACKGROUND,
-    JELLY,
-    OBJECT,
-    LEVELDOWN,
-    LEVELUP,
+    Fever,
+    GameStart,
+    Item,
+    Jump,
+    SizeChange,
+    Hit,
+    Attack,
 
     NONE,
 }
@@ -17,20 +19,41 @@ public enum SoundClip
 public class SoundManager : MonoBehaviour
 {
     [SerializeField] private GameObject soundPrefab;
-    private Dictionary<SoundClip, AudioClip> soundMap = new Dictionary<SoundClip, AudioClip>();
+    [SerializeField] private AudioSource bgmSource;
+
+    [SerializeField] private AudioClip defaultClip;
+    [SerializeField] private AudioClip fevelClip;
+
+    private Dictionary<EffectSoundClip, AudioClip> soundMap = new Dictionary<EffectSoundClip, AudioClip>();
 
     private void Awake()
     {
-        for (int i = 0; i < (int)SoundClip.NONE; i++)
+        for (int i = 0; i < (int)EffectSoundClip.NONE; i++)
         {
-            SoundClip temp = (SoundClip)i;
-            var loadRes = Resources.Load("Sound/Clips/" + temp.ToString());
+            EffectSoundClip temp = (EffectSoundClip)i;
+            var loadRes = Resources.Load("Sound/Effect/" + temp.ToString() + "_Effect");
             if (loadRes is null) continue;
             soundMap.Add(temp, loadRes as AudioClip);
         }
+
+
     }
 
-    public void Play(SoundClip _clip)
+    public void FeverPlay()
+    {
+        Managers.Sound.Play(EffectSoundClip.Fever);
+
+        bgmSource.clip = fevelClip;
+        bgmSource.Play();
+    }
+
+    public void DefaultPlay()
+    {
+        bgmSource.clip = defaultClip;
+        bgmSource.Play();
+    }
+
+    public void Play(EffectSoundClip _clip)
     {
         if (!soundMap.TryGetValue(_clip, out AudioClip clip)) return;
 

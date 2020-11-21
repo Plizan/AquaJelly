@@ -28,7 +28,10 @@ public class GameManager : MonoBehaviour
     public int Score { get => score; set { score = value; Managers.UI.txtScore.text = score.ToString(); } }
     [SerializeField] private int spawnTime;
 
-    [SerializeField] private int feverTime;
+    [SerializeField] private float feverTime;
+    public float invincibilityTime;
+
+    [SerializeField] private float throwPower;
 
     public bool isFeverTime = false;
 
@@ -38,6 +41,7 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private int startLevel;
     [SerializeField] private float playerSpeed;
+    [SerializeField] private float playerFeverSpeedMagnification;
     [SerializeField] private int playerJumpCount;
     [SerializeField] private float playerJumpPower;
     [SerializeField] private float playerDotDamage;
@@ -48,6 +52,7 @@ public class GameManager : MonoBehaviour
 
     [Header("Player Field")]
     public PlayerCtrl playerCtrl;
+    public Sprite feverSprite;
 
     [Header("Camera Field")]
     public CameraCtrl cameraCtrl;
@@ -59,13 +64,14 @@ public class GameManager : MonoBehaviour
     public ObjectSpawner obstancleSpawner;
 
     [Header("Fever Field")]
-    [SerializeField] private GameObject backFeverObj;
-    [SerializeField] private GameObject frontFeverObj;
+    [SerializeField] private SpriteAnimation feverAnim;
     #endregion
 
     #region CallbackFunction
     private void Start()
     {
+        Managers.Sound.DefaultPlay();
+
         ProgressType = progressType;
 
         if (ProgressType == ProgressType.Game) GameStart();
@@ -103,6 +109,7 @@ public class GameManager : MonoBehaviour
         playerCtrl.power = playerJumpPower;
         playerCtrl.maxJumpCount = playerJumpCount;
         playerCtrl.dotDamage = playerDotDamage;
+        playerCtrl.isFirst = true;//TODO
     }
 
     public void SetCamera()
@@ -125,6 +132,17 @@ public class GameManager : MonoBehaviour
         StartCoroutine(GameStart());
     }
 
+    private IEnumerator SecondScore()
+    {
+        //TODO
+
+        while (true)
+        {
+            Score += isFeverTime ? 30 : 5;
+            yield return new WaitForSeconds(0.3f);
+        }
+    }
+
     private IEnumerator GameStart()
     {
         Initialization(ProgressType.Game);
@@ -134,10 +152,10 @@ public class GameManager : MonoBehaviour
 
         playerCtrl.Jump();
         playerCtrl.SetLevelOrHealth(startLevel);
-        obstancleSpawner.ObjectInstantiate();
-
+        //obstancleSpawner.ObjectInstantiate();
         yield return new WaitForSeconds(.15f);
 
+        StartCoroutine(SecondScore());
         backgroundCtrl.speed = backgroundSpeed;
         StartCoroutine(backgroundCtrl.Scroll());
         StartCoroutine(cameraCtrl.CameraFollow(playerCtrl.transform));
@@ -157,13 +175,21 @@ public class GameManager : MonoBehaviour
 
     public IEnumerator FeverMode()
     {
+        Managers.Sound.FeverPlay();
+
+
+
+        StartCoroutine(feverAnim.StartAnimation());
+        yield return new WaitForSeconds(0.35f);
+        playerCtrl.speed *= playerFeverSpeedMagnification;
         isFeverTime = true;
-
-        backFeverObj.SetActive(true);
-        frontFeverObj.SetActive(true);
-
-        backFeverObj.transform.DOShakePosition(feverTime);
-        frontFeverObj.transform.DOShakePosition(feverTime);
+         
+        backgroundCtrl.SetFever(true);
+        var pos = playerCtrl.transform.position;
+        pos.y = 0.1f;
+        playerCtrl.transform.position = pos;
+        var rig = playerCtrl.GetComponent<Rigidbody2D>();
+        rig.gravityScale = 0f;
 
         for (float f = feverTime; f >= 0; f -= Time.deltaTime)
         {
@@ -172,15 +198,37 @@ public class GameManager : MonoBehaviour
             yield return null;
         }
 
-        backFeverObj.SetActive(false);
-        frontFeverObj.SetActive(false);
+        rig.gravityScale = 7.5f;
+
+        StartCoroutine(feverAnim.StartAnimation());
+        yield return new WaitForSeconds(0.35f);//TODO
+        backgroundCtrl.SetFever(false);
+        //TODO
+
+        Managers.Sound.DefaultPlay();
+
+        playerCtrl.speed /= playerFeverSpeedMagnification;
 
         obstancleSpawner.objectRemove();
-        obstancleSpawner.ObjectInstantiate();
+        //obstancleSpawner.ObjectInstantiate();
 
         playerCtrl.SetLevelOrHealth(maxLevel - 2);
 
         isFeverTime = false;
+    }
+
+    public void ThrowObject(GameObject obj)
+    {
+        Managers.Sound.Play(EffectSoundClip.Attack);
+
+        score += 40;//TODO
+
+        var rig = obj.AddComponent<Rigidbody2D>();
+
+        if (rig is null) return;
+
+        rig.velocity = Vector2.right * throwPower;
+        rig.AddTorque(1000);
     }
     #endregion
 }

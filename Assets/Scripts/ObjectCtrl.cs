@@ -30,7 +30,7 @@ public class ObjectCtrl : MonoBehaviour
             if (null != Managers.Game)
             {
                 //Managers.Game.Health -= demage;
-                Managers.Sound.Play(SoundClip.OBJECT);
+                //Managers.Sound.Play(SoundClip.);
             }
         }
     }

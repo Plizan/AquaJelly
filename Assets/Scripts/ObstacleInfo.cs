@@ -4,13 +4,9 @@ using UnityEngine;
 
 public class ObstacleInfo : MonoBehaviour
 {
-    public float damage;
-    public int level;
-
-    private void Start()
-    {
-        Invoke("RemoveObstacle", 5);
-    }
+    public float damage = 100;
+    public int minLevel;
+    public int maxLevel;
 
     private void RemoveObstacle()
     {

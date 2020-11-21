@@ -13,11 +13,11 @@ public class UIAnimated : MonoBehaviour
     {
         beginningPosition = GetComponent<RectTransform>().anchoredPosition;
 
-        if (progressType == ProgressType.None)
-            progressType = transform.parent.GetComponent<UIAnimated>()?.progressType ?? ProgressType.None;
+        //if (progressType == ProgressType.None)
+        //    progressType = transform.parent.GetComponent<UIAnimated>()?.progressType ?? ProgressType.None;
 
-        if (progressType == ProgressType.None)
-            gameObject.SetActive(false);
+        //if (progressType == ProgressType.None)
+        //    gameObject.SetActive(false);
     }
 
     public void Initialization(ProgressType progressType)

@@ -11,25 +11,28 @@ public class PlayerCtrl : MonoBehaviour
     [HideInInspector] public float power = 1;
     [HideInInspector] public float maxJumpCount = 1;
     [HideInInspector] public float dotDamage = 3;
+    [HideInInspector] public bool isInvincibility = false;
 
     private int level;
 
     private SpriteRenderer _spriteRenderer;
 
     [SerializeField] private Sprite[] sprites;
+    [SerializeField] private Sprite fever;
     [SerializeField] private float animationDelay;
+
+    [SerializeField] private float[] levelSize;
 
     public int Level
     {
         get => level;
         set
         {
-            if (level < value)
-                Managers.Sound.Play(SoundClip.LEVELUP);
-            else if (level > value)
-                Managers.Sound.Play(SoundClip.LEVELDOWN);
+            Managers.Sound.Play(EffectSoundClip.SizeChange);
 
-            transform.DOScale(Vector3.one * value, Mathf.Abs(level - value));
+            Mathf.Min(Managers.Game.maxLevel, value);
+
+            transform.DOScale(Vector3.one * levelSize[value - 1], Mathf.Abs(level - value));
 
             level = value;
         }
@@ -53,52 +56,67 @@ public class PlayerCtrl : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0) && jumpCount < maxJumpCount && Managers.Game.ProgressType == ProgressType.Game)
+        if ((Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space)) && jumpCount < maxJumpCount && Managers.Game.ProgressType == ProgressType.Game && !Managers.Game.isFeverTime)
         {
             Jump();
         }
     }
 
+    bool isCollision;
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.collider.CompareTag("Floor"))
+        {
             jumpCount = 0;
+            isCollision = true;
+        }
+    }
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        if (collision.collider.CompareTag("Floor"))
+            isCollision = false;
     }
 
     private void OnTriggerEnter2D(Collider2D collider)
     {
-
-        if (collider.CompareTag("Obstacle"))
+        if (!isInvincibility && collider.CompareTag("Obstacle"))
         {
-            if (Managers.Game.isFeverTime)
-                collider.transform.parent.gameObject.AddComponent<Rigidbody2D>().velocity = Vector2.up * power * 5;
+            var tra = collider.transform.parent;
+            var info = tra.GetComponent<ObstacleInfo>();
 
-            var parentTra = collider.transform.parent;
-            var info = parentTra.GetComponent<ObstacleInfo>();
+            if (info is null) return;
 
-            if (level < info.level) return;
+            if (Managers.Game.isFeverTime || level > info.maxLevel)
+            {
+                Managers.Game.ThrowObject(tra.gameObject);
+                return;
+            }
 
+            if (level < info.minLevel) return;
+
+            Managers.Sound.Play(EffectSoundClip.Hit);
             Health -= info.damage;
 
-            var layer = LayerMask.NameToLayer("NonCollider");
-            parentTra.gameObject.layer = layer;
-
-            foreach (Transform i in parentTra)
-                if (i.CompareTag("Obstacle"))
-                    i.gameObject.layer = layer;
+            //StartCoroutine(Invincibility());
         }
-
         else if (collider.CompareTag("Jelly"))
         {
+            Managers.Sound.Play(EffectSoundClip.Item);
+
             var info = collider.GetComponent<JellyInfo>();
             Managers.Game.Score += info.score;
             Health += info.heal;
         }
 
         else if (collider.CompareTag("SpawnPoint"))
-            Managers.Game.obstancleSpawner.ObjectInstantiate();
+        //Managers.Game.obstancleSpawner.ObjectInstantiate();
+        {
+            Managers.Game.GameStop();
+        }
     }
 
+    public Coroutine _animation;
     public void Initialization(ProgressType progressType)
     {
         switch (progressType)
@@ -108,12 +126,29 @@ public class PlayerCtrl : MonoBehaviour
                 break;
             case ProgressType.Game:
                 StartCoroutine(Movement());
-                StartCoroutine(Animation());
+                _animation = StartCoroutine(Animation());
                 StartCoroutine(HealthUpdate());
                 break;
             case ProgressType.None:
                 break;
         }
+    }
+
+    public IEnumerator Invincibility()
+    {
+        isInvincibility = true;
+
+        bool isEnable = true;
+        var spriteRenderer = GetComponent<SpriteRenderer>();
+
+        for (float f = 0; f < Managers.Game.invincibilityTime; f += Time.deltaTime)
+        {
+            spriteRenderer.enabled = !isEnable;
+            yield return new WaitForSeconds(.1f);
+        }
+
+        spriteRenderer.enabled = true;
+        isInvincibility = false;
     }
 
     public IEnumerator HealthUpdate()
@@ -123,7 +158,8 @@ public class PlayerCtrl : MonoBehaviour
 
         while (true)
         {
-            Health -= Time.deltaTime * dotDamage;
+            if (!Managers.Game.isFeverTime)
+                Health -= Time.deltaTime * dotDamage;
 
             bool isWait = false;
 
@@ -143,7 +179,7 @@ public class PlayerCtrl : MonoBehaviour
 
             if (Health <= 0) Managers.Game.GameStop();
 
-            if (isWait) yield return new WaitForSeconds(1);
+            //if (isWait) yield return new WaitForSeconds(1);
 
             yield return null;
         }
@@ -161,25 +197,31 @@ public class PlayerCtrl : MonoBehaviour
         }
     }
 
-    private IEnumerator Animation()
+    public IEnumerator Animation()
     {
         uint i = 0;
 
         while (true)
         {
             var value = ++i % sprites.Length;
-            _spriteRenderer.sprite = sprites[value];
-            if (value == 0 && jumpCount == 0)
-                _rigidbody.velocity = Vector2.up * power / 3;
+            _spriteRenderer.sprite = Managers.Game.isFeverTime ? fever : sprites[value];
+
+            if (!Managers.Game.isFeverTime && /*isCollision &&*/ value == 1)
+                _rigidbody.velocity += Vector2.up * power / 3;
 
             yield return new WaitForSeconds(animationDelay);
         }
     }
 
     int jumpCount = 0;
+    public bool isFirst = true;
     public void Jump()
     {
+        if (!isFirst)
+            Managers.Sound.Play(isFirst ? EffectSoundClip.GameStart : EffectSoundClip.Jump);
+
+        isFirst = false;
         jumpCount++;
-        _rigidbody.velocity = Vector2.up * power;
+        _rigidbody.velocity += Vector2.up * power;
     }
 }
