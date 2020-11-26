@@ -185,11 +185,11 @@ public class GameManager : MonoBehaviour
         isFeverTime = true;
          
         backgroundCtrl.SetFever(true);
-        var pos = playerCtrl.transform.position;
+        var pos = playerCtrl.transform.position;//TODO
         pos.y = 0.1f;
         playerCtrl.transform.position = pos;
         var rig = playerCtrl.GetComponent<Rigidbody2D>();
-        rig.gravityScale = 0f;
+        rig.constraints = RigidbodyConstraints2D.FreezeAll;
 
         for (float f = feverTime; f >= 0; f -= Time.deltaTime)
         {
@@ -198,7 +198,7 @@ public class GameManager : MonoBehaviour
             yield return null;
         }
 
-        rig.gravityScale = 7.5f;
+        rig.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezeRotation;
 
         StartCoroutine(feverAnim.StartAnimation());
         yield return new WaitForSeconds(0.35f);//TODO
@@ -209,7 +209,7 @@ public class GameManager : MonoBehaviour
 
         playerCtrl.speed /= playerFeverSpeedMagnification;
 
-        obstancleSpawner.objectRemove();
+        //obstancleSpawner.objectRemove();
         //obstancleSpawner.ObjectInstantiate();
 
         playerCtrl.SetLevelOrHealth(maxLevel - 2);

@@ -146,6 +146,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isTargetPlayer: 0
   speed: 4
+  isMove: 0
 --- !u!114 &-4087947416490373174
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -158,6 +159,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6392b3f373e60b04f91169ceebc08ff1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 0
+  damage: 50
   minLevel: 0
-  maxLevel: 0
+  maxLevel: 3

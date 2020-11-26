@@ -9,7 +9,7 @@ public class JellySpawner : MonoBehaviour
 
     private void Start()
     {
-        StartCoroutine("JellySpawn");
+        //StartCoroutine("JellySpawn");
     }
 
     IEnumerator JellySpawn()

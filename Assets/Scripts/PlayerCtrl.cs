@@ -32,7 +32,7 @@ public class PlayerCtrl : MonoBehaviour
 
             Mathf.Min(Managers.Game.maxLevel, value);
 
-            transform.DOScale(Vector3.one * levelSize[value - 1], Mathf.Abs(level - value));
+            transform.DOScale(Vector3.one * levelSize[value], Mathf.Abs(level - value));
 
             level = value;
         }
