@@ -62,20 +62,20 @@ public class PlayerCtrl : MonoBehaviour
         }
     }
 
-    bool isCollision;
+    //bool isCollision;
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.collider.CompareTag("Floor"))
         {
             jumpCount = 0;
-            isCollision = true;
+            //isCollision = true;
         }
     }
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-        if (collision.collider.CompareTag("Floor"))
-            isCollision = false;
+        //if (collision.collider.CompareTag("Floor"))
+            //isCollision = false;
     }
 
     private void OnTriggerEnter2D(Collider2D collider)
@@ -161,12 +161,12 @@ public class PlayerCtrl : MonoBehaviour
             if (!Managers.Game.isFeverTime)
                 Health -= Time.deltaTime * dotDamage;
 
-            bool isWait = false;
+            //bool isWait = false;
 
             if (Level > 0 && Health < maxHealth / (maxLevel - 1) * (Level - 1))
             {
                 Level--;
-                isWait = true;
+                //isWait = true;
             }
             else if (Level < maxLevel && Health > maxHealth / (maxLevel - 1) * Level)
             {
@@ -174,7 +174,7 @@ public class PlayerCtrl : MonoBehaviour
 
                 if (Level == maxLevel) yield return StartCoroutine(Managers.Game.FeverMode());
 
-                isWait = true;
+                //isWait = true;
             }
 
             if (Health <= 0) Managers.Game.GameStop();

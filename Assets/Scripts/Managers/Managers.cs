@@ -29,8 +29,9 @@ public class Managers : MonoBehaviour
     }
 }
 
-[CustomEditor(typeof(Managers))]
-public class Inspector : Editor
+    
+[CustomEditor(typeof(Managers)), CanEditMultipleObjects]
+public class ManagersInspector : Editor
 {
     public override void OnInspectorGUI()
     {
