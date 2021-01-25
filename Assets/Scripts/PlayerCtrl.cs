@@ -17,8 +17,10 @@ public class PlayerCtrl : MonoBehaviour
 
     private SpriteRenderer _spriteRenderer;
 
-    [SerializeField] private Sprite[] sprites;
-    [SerializeField] private Sprite fever;
+    [SerializeField] private Sprite[] runSprites;
+    [SerializeField] private Sprite[] jumpSprites;
+    [SerializeField] private Sprite[] feverSprites;
+
     [SerializeField] private float animationDelay;
 
     [SerializeField] private float[] levelSize;
@@ -38,7 +40,15 @@ public class PlayerCtrl : MonoBehaviour
         }
     }
     [SerializeField] private float health;
-    public float Health { get => health; set { health = value; Managers.UI.imgHealth.fillAmount = health / Managers.Game.maxHealth; } }
+    public float Health
+    {
+        get => health;
+        set
+        {
+            health = value;
+            Managers.UI.imgHealth.fillAmount = health / Managers.Game.maxHealth;
+        }
+    }
 
     public void SetLevelOrHealth(int level)
     {
@@ -54,11 +64,13 @@ public class PlayerCtrl : MonoBehaviour
         _spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
+    public bool isJump = false;
+    
     private void Update()
     {
         if ((Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space)) && jumpCount < maxJumpCount && Managers.Game.ProgressType == ProgressType.Game && !Managers.Game.isFeverTime)
         {
-            Jump();
+            isJump = true;
         }
     }
 
@@ -75,7 +87,7 @@ public class PlayerCtrl : MonoBehaviour
     private void OnCollisionExit2D(Collision2D collision)
     {
         //if (collision.collider.CompareTag("Floor"))
-            //isCollision = false;
+        //isCollision = false;
     }
 
     private void OnTriggerEnter2D(Collider2D collider)
@@ -110,13 +122,14 @@ public class PlayerCtrl : MonoBehaviour
         }
 
         else if (collider.CompareTag("SpawnPoint"))
-        //Managers.Game.obstancleSpawner.ObjectInstantiate();
+            //Managers.Game.obstancleSpawner.ObjectInstantiate();
         {
             Managers.Game.GameStop();
         }
     }
 
     public Coroutine _animation;
+
     public void Initialization(ProgressType progressType)
     {
         switch (progressType)
@@ -203,22 +216,38 @@ public class PlayerCtrl : MonoBehaviour
 
         while (true)
         {
-            var value = ++i % sprites.Length;
-            _spriteRenderer.sprite = Managers.Game.isFeverTime ? fever : sprites[value];
+            var value = ++i % (Managers.Game.isFeverTime ? feverSprites.Length : runSprites.Length);
+            _spriteRenderer.sprite = Managers.Game.isFeverTime ? feverSprites[value] : runSprites[value];
 
             if (!Managers.Game.isFeverTime && /*isCollision &&*/ value == 1)
                 _rigidbody.velocity += Vector2.up * power / 3;
 
+            if(isJump)
+                yield return StartCoroutine(JumpAnimation());
+
+            yield return new WaitForSeconds(animationDelay);
+        }
+    }
+
+    public IEnumerator JumpAnimation()
+    {
+        isJump = false;
+        Jump();
+        
+        for (int i = 0; i < jumpSprites.Length; i++)
+        {
+            _spriteRenderer.sprite = jumpSprites[i];
             yield return new WaitForSeconds(animationDelay);
         }
     }
 
     int jumpCount = 0;
     public bool isFirst = true;
+
     public void Jump()
     {
         if (!isFirst)
-            Managers.Sound.Play(isFirst ? EffectSoundClip.GameStart : EffectSoundClip.Jump);
+            Managers.Sound.Play(EffectSoundClip.Jump);
 
         isFirst = false;
         jumpCount++;

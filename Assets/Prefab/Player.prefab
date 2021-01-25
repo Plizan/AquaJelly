@@ -96,7 +96,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: baab31569b9ea814bad95af06e745cc0, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 318ff229cb44093428b7811da5593012, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -139,12 +139,31 @@ MonoBehaviour:
   power: 5
   maxJumpCount: 1
   dotDamage: 3
-  sprites:
-  - {fileID: 21300000, guid: baab31569b9ea814bad95af06e745cc0, type: 3}
-  - {fileID: 21300000, guid: 318ff229cb44093428b7811da5593012, type: 3}
-  - {fileID: 21300000, guid: acb6f7ae2933cde4fb60a3388725dc7b, type: 3}
-  - {fileID: 21300000, guid: d4e7073c56d46684d9b1c0abb872e97f, type: 3}
-  animationDelay: 0.09
+  isInvincibility: 0
+  runSprites:
+  - {fileID: 21300000, guid: 5509889e1155621418590b7f4506d5f6, type: 3}
+  - {fileID: 21300000, guid: ad06b391c77f4584092a73d068b35cb7, type: 3}
+  - {fileID: 21300000, guid: a015259bdb2cac9488a5488cdccd71d5, type: 3}
+  - {fileID: 21300000, guid: 38eba3e711ba56f4ead3435afa5f56dc, type: 3}
+  jumpSprites:
+  - {fileID: 21300000, guid: bcb6a8f0896dc744d8ebeadebd0be027, type: 3}
+  - {fileID: 21300000, guid: 00f306b84529cc44e9aabc37234f32a5, type: 3}
+  - {fileID: 21300000, guid: 9c622df377c73a24bbcb5bd92b96ff10, type: 3}
+  - {fileID: 21300000, guid: 6ce5b72bf6b35b5429ce1457aa505e48, type: 3}
+  - {fileID: 21300000, guid: bb5344b1c44247e41a1a0cf5abce0d81, type: 3}
+  feverSprites:
+  - {fileID: 21300000, guid: 7a16d19e19d5af54d9dd5ee25c4a7b56, type: 3}
+  - {fileID: 21300000, guid: 54f80204b319f544cad04dfa070b89f9, type: 3}
+  - {fileID: 21300000, guid: 745b0161d812d574cbec8c60936c4ae6, type: 3}
+  - {fileID: 21300000, guid: 3ab2233d8097b2c45b1ac38ad30bc04d, type: 3}
+  - {fileID: 21300000, guid: 7705feed4b7e4574b83aea24fd73c5f2, type: 3}
+  animationDelay: 0.1
+  levelSize:
+  - 0
+  - 1
+  - 2
+  - 3
+  - 7
   health: 0
   isFirst: 1
 --- !u!60 &1169965208

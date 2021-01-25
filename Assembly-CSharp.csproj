@@ -55,6 +55,7 @@
      <Compile Include="Assets\Scripts\ThrowObstacle.cs" />
      <Compile Include="Assets\ThrowSpawn.cs" />
      <Compile Include="Assets\Scripts\ObjectSpawner.cs" />
+     <Compile Include="Assets\MapEditor.cs" />
      <Compile Include="Assets\Scripts\CameraCtrl.cs" />
      <Compile Include="Assets\Scripts\AnimationButton.cs" />
      <Compile Include="Assets\Resources\Asset\Cartoon FX\Demo\Assets\CFX_AutoStopLoopedEffect.cs" />
@@ -80,7 +81,7 @@
      <Compile Include="Assets\Resources\Asset\Cartoon FX\Spawn System\CFX_SpawnSystem.cs" />
      <Compile Include="Assets\Scripts\Managers\TitleManager.cs" />
      <Compile Include="Assets\Scripts\UIAnimated.cs" />
-     <Compile Include="Assets\MapEditor.cs" />
+     <Compile Include="Assets\MapInfo.cs" />
      <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile Overlay.shader" />
      <None Include="Assets\Resources\Asset\Cartoon FX\Shaders\CFX3 Multiply Color.shader" />

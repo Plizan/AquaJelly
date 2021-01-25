@@ -67,7 +67,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private SpriteAnimation feverAnim;
     #endregion
 
-    #region CallbackFunction
+    #region Function
     private void Start()
     {
         Managers.Sound.DefaultPlay();
@@ -150,7 +150,7 @@ public class GameManager : MonoBehaviour
         Camera.main.DOOrthoSize(1.777778f, .5f).SetEase(Ease.InSine);
         yield return new WaitForSeconds(.4f);
 
-        playerCtrl.Jump();
+        playerCtrl.isJump = true;
         playerCtrl.SetLevelOrHealth(startLevel);
         //obstancleSpawner.ObjectInstantiate();
         yield return new WaitForSeconds(.15f);
