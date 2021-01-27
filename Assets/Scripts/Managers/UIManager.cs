@@ -9,8 +9,28 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject panelLobby;
     [SerializeField] private GameObject panelGame;
 
-    public Text txtScore;
+    [Header("Lobby")]
+    [SerializeField] private Image imgCombo;
+    public int SetCombo
+    {
+        set
+        {
+            value = Mathf.Min(combos.Length, value);
+            imgCombo.gameObject.SetActive(value > 0);
+
+            if (imgCombo.gameObject.activeSelf)
+                imgCombo.sprite = combos[value];
+        }
+    }
+
+    public Text txtHighScore;
+    public Text txtNowScore;
     public Image imgHealth;
+
+    [SerializeField] private Sprite[] combos;
+
+    [Header("Game")]
+    public Text txtScore;
 
     private List<UIAnimated> allUI = new List<UIAnimated>();
 

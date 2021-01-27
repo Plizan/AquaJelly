@@ -11,12 +11,16 @@ public class CameraCtrl : MonoBehaviour
     {
         while (true)
         {
-            var originPosition = this.transform.position;
-            var markPosition = originPosition;
-            markPosition.x = transform.position.x + xValue;
-            this.transform.position = Vector3.Lerp(originPosition, markPosition, Time.deltaTime * speed);
-
+            SetCamera(transform);
             yield return null;
         }
+    }
+
+    public void SetCamera(Transform transform)
+    {
+        var originPosition = this.transform.position;
+        var markPosition = originPosition;
+        markPosition.x = transform.position.x + xValue;
+        this.transform.position = Vector3.Lerp(originPosition, markPosition, Time.deltaTime * speed);
     }
 }

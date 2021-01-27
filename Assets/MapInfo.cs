@@ -6,5 +6,5 @@ using UnityEngine;
 public class MapInfo : MonoBehaviour
 {
     public int level = 1;
-    public int mapLength;
+    public GameObject floors;
 }

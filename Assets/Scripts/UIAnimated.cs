@@ -22,6 +22,7 @@ public class UIAnimated : MonoBehaviour
 
     public void Initialization(ProgressType progressType)
     {
+        if (progressType == ProgressType.None) return;
         gameObject.SetActive(progressType == this.progressType);
     }
 }

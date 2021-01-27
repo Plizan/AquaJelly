@@ -20,12 +20,20 @@ public class Managers : MonoBehaviour
     private static UIManager ui;
     public static UIManager UI { get => ui; set => ui = value; }
 
+    private static PoolManager pool;
+    public static PoolManager Pool { get => pool; set => pool = value; }
+    
+    private static MapManager map;
+    public static MapManager Map { get => map; set => map = value; }
+
     private void Awake()
     {
         title = GetComponent<TitleManager>();
         sound = GetComponent<SoundManager>();
         game = GetComponent<GameManager>();
         ui = GetComponent<UIManager>();
+        pool = GetComponent<PoolManager>();
+        map = GetComponent<MapManager>();
     }
 }
 
@@ -41,5 +49,6 @@ public class ManagersInspector : Editor
         if (GUILayout.Button("Set UI")) Managers.UI.Initialization(Managers.Game.ProgressType);
         if (GUILayout.Button("Set Background")) Managers.Game.SetBackground();
         if (GUILayout.Button("Set Camera")) Managers.Game.SetCamera();
+        if (GUILayout.Button("Set Back")) Managers.Map.SetFloors(Managers.Game.stageLevel);
     }
 }

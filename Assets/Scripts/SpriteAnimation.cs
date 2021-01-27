@@ -13,13 +13,23 @@ public class SpriteAnimation : MonoBehaviour
     public bool isLoop = false;
     public bool playOnAwake = false;
 
+    private Coroutine coroutine;
+    
     private void Awake()
     {
         if (playOnAwake)
-            StartCoroutine(StartAnimation());
+            coroutine = StartCoroutine(CoroutineStartAnimation());
     }
 
-    public IEnumerator StartAnimation()
+    public void StartAnimation()
+    {
+        if (coroutine != null) return;
+
+        gameObject.SetActive(true);
+        coroutine = StartCoroutine(CoroutineStartAnimation());
+    }
+    
+    public IEnumerator CoroutineStartAnimation()
     {
         gameObject.SetActive(true);
 
@@ -30,9 +40,10 @@ public class SpriteAnimation : MonoBehaviour
         }
 
         if (isLoop)
-            StartCoroutine(StartAnimation());
+            coroutine = StartCoroutine(CoroutineStartAnimation());
         else
             gameObject.SetActive(false);
 
+        if (coroutine != null) coroutine = null;
     }
 }

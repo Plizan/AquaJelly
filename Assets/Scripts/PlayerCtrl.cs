@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
 
 public class PlayerCtrl : MonoBehaviour
 {
@@ -25,6 +26,11 @@ public class PlayerCtrl : MonoBehaviour
 
     [SerializeField] private float[] levelSize;
 
+
+    private void Start()
+    {
+        spriteRenderer = GetComponent<SpriteRenderer>();
+    }
     public int Level
     {
         get => level;
@@ -68,7 +74,7 @@ public class PlayerCtrl : MonoBehaviour
     
     private void Update()
     {
-        if ((Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space)) && jumpCount < maxJumpCount && Managers.Game.ProgressType == ProgressType.Game && !Managers.Game.isFeverTime)
+        if ((Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space)) && !isJump && jumpCount < maxJumpCount && Managers.Game.ProgressType == ProgressType.Game && !Managers.Game.isFeverTime)
         {
             isJump = true;
         }
@@ -111,20 +117,48 @@ public class PlayerCtrl : MonoBehaviour
             Health -= info.damage;
 
             //StartCoroutine(Invincibility());
+            StartCoroutine(Damage());
         }
         else if (collider.CompareTag("Jelly"))
         {
             Managers.Sound.Play(EffectSoundClip.Item);
 
             var info = collider.GetComponent<JellyInfo>();
-            Managers.Game.Score += info.score;
+            Managers.Game.Score += info.score + Managers.Game.stageLevel;
             Health += info.heal;
+
+
+            for (int i = 0; i < Managers.Pool.jellyEffectPool.Count; i++)
+            {
+                if (!Managers.Pool.jellyEffectPool[i].activeSelf)
+                {
+                    Managers.Pool.jellyEffectPool[i].transform.position = transform.position;
+                    Managers.Pool.jellyEffectPool[i].SetActive(true);
+                    break;
+                }
+            }
+
         }
 
         else if (collider.CompareTag("SpawnPoint"))
             //Managers.Game.obstancleSpawner.ObjectInstantiate();
         {
-            Managers.Game.GameStop();
+            StartCoroutine(Managers.Game.GameStop());
+        }
+        else if (collider.CompareTag("ThrowObstacleSpawn"))
+        {
+            for (int i = 0; i <Managers.Pool.warn.Length; i++)
+            {
+                if (!Managers.Pool.warn[i].activeSelf)
+                {
+                    float y = collider.GetComponent<ThrowSpawn>().throwObstacle.transform.position.y * 310 + 35;
+                    Debug.Log(y);
+                    Managers.Pool.warn[i].GetComponent<RectTransform>().anchoredPosition = Vector2.right * -50 + Vector2.up * y;
+
+                    Managers.Pool.warn[i].SetActive(true);
+                    break;
+                }
+            }
         }
     }
 
@@ -132,18 +166,42 @@ public class PlayerCtrl : MonoBehaviour
 
     public void Initialization(ProgressType progressType)
     {
+        void Init()
+        {
+            Managers.Game.cameraCtrl.transform.position = new Vector3(0, 0, -100);
+            _rigidbody.velocity = Vector2.zero;
+            transform.position = new Vector3(-0.0529999994f, -1.22099996f, -1f);
+            spriteRenderer.color = Color.white;
+            transform.localScale = Vector3.one;
+        }
+        
         switch (progressType)
         {
             case ProgressType.Lobby:
                 StopAllCoroutines();
+                Init();
                 break;
             case ProgressType.Game:
+                Init();
                 StartCoroutine(Movement());
                 _animation = StartCoroutine(Animation());
                 StartCoroutine(HealthUpdate());
                 break;
             case ProgressType.None:
                 break;
+        }
+    }
+
+    WaitForSeconds damageDelay = new WaitForSeconds(0.1f);
+    SpriteRenderer spriteRenderer;
+    IEnumerator Damage()
+    {
+        for (int i = 0; i < 3; i++)
+        {
+            spriteRenderer.color = Color.red;
+            yield return damageDelay;
+            spriteRenderer.color = Color.white;
+            yield return damageDelay;
         }
     }
 
@@ -190,7 +248,11 @@ public class PlayerCtrl : MonoBehaviour
                 //isWait = true;
             }
 
-            if (Health <= 0) Managers.Game.GameStop();
+            if (Health <= 0)
+            {
+                Managers.Game.stageLevel = 1;
+                StartCoroutine(Managers.Game.GameStop());
+            }
 
             //if (isWait) yield return new WaitForSeconds(1);
 
@@ -252,5 +314,6 @@ public class PlayerCtrl : MonoBehaviour
         isFirst = false;
         jumpCount++;
         _rigidbody.velocity += Vector2.up * power;
+        Debug.Log("jump");
     }
 }

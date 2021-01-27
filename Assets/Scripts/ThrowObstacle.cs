@@ -21,6 +21,6 @@ public class ThrowObstacle : MonoBehaviour
     private void Update()
     {
         if (isMove)
-            transform.Translate(Vector2.right * speed * Time.deltaTime);
+            transform.Translate(Vector2.left * speed * Time.deltaTime);
     }
 }

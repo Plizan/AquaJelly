@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ThrowSpawn : MonoBehaviour
 {
-    [SerializeField] private ThrowObstacle throwObstacle;
+    [SerializeField] public ThrowObstacle throwObstacle;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
