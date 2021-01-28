@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -21,21 +22,28 @@ public class SpriteAnimation : MonoBehaviour
             coroutine = StartCoroutine(CoroutineStartAnimation());
     }
 
-    public void StartAnimation()
+    public void StartAnimation(Action action = null, int frame = 0)
     {
         if (coroutine != null) return;
 
         gameObject.SetActive(true);
-        coroutine = StartCoroutine(CoroutineStartAnimation());
+        coroutine = StartCoroutine(CoroutineStartAnimation(action, frame));
     }
     
-    public IEnumerator CoroutineStartAnimation()
+    public IEnumerator CoroutineStartAnimation(Action action = null, int frame = 0)
     {
         gameObject.SetActive(true);
 
-        foreach (var i in sprites)
+        for (int i = 0; i < sprites.Length; i++)
         {
-            image.sprite = i;
+            image.sprite = sprites[i];
+
+            if (i != 0 && i > frame)
+            {
+                action?.Invoke();
+                action = null;
+            }
+            
             yield return new WaitForSeconds(delay);
         }
 
@@ -45,5 +53,7 @@ public class SpriteAnimation : MonoBehaviour
             gameObject.SetActive(false);
 
         if (coroutine != null) coroutine = null;
+        
+        action?.Invoke();
     }
 }

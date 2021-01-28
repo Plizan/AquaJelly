@@ -133,7 +133,9 @@ public class GameManager : MonoBehaviour
                 Managers.UI.SetCombo = stageLevel - 2;
                 Managers.UI.txtHighScore.text = $"HIGH SCORE : {highScore}";
                 Managers.UI.txtNowScore.text = $"SCORE : {score}";
+                Managers.UI.txtStage.text = $"STAGE : {stageLevel}";
                 Managers.Map.SetFloors(stageLevel);
+                Managers.Map.DeleteLevel();
                 break;
             }
         }
@@ -218,62 +220,73 @@ public class GameManager : MonoBehaviour
 
         stageLevel++;
         
-        StartCoroutine(GameStop());
+        GameStop();
     }
 
-    public IEnumerator GameStop()
+    public void GameStop()
     {
-        Initialization(ProgressType.Lobby);
+        feverAnim.StartAnimation(() =>
+        {
+            EndFever();
+            
+            Initialization(ProgressType.Lobby);
+            
+            Managers.Map.SetFloors(stageLevel);
 
-        feverAnim.StartAnimation();
-        yield return new WaitForSeconds(.42f);
-
-        Managers.Map.SetFloors(stageLevel);
-
-        Score = 0;
-        playerCtrl.Initialization(ProgressType);
+            playerCtrl.Initialization(ProgressType);
         
-        StopAllCoroutines();
-        obstancleSpawner.objectRemove();
+            StopAllCoroutines();
+            obstancleSpawner.objectRemove();
 
-        isClear = false;
+            isClear = false;
+        }, 6);
     }
 
-    public IEnumerator FeverMode()
+    public void FeverMode()
     {
         Managers.Sound.FeverPlay();
 
-        feverAnim.StartAnimation();
-        yield return new WaitForSeconds(.42f);
-
-        playerCtrl.speed *= playerFeverSpeedMagnification;
-        isFeverTime = true;
-
-        backgroundCtrl.SetFever(true);
-        var pos = playerCtrl.transform.position; //TODO
-        pos.y = 0.1f;
-        playerCtrl.transform.position = pos;
-        var rig = playerCtrl.GetComponent<Rigidbody2D>();
-        rig.constraints = RigidbodyConstraints2D.FreezeAll;
-
-        for (float f = feverTime; f >= 0; f -= Time.deltaTime)
+        feverAnim.StartAnimation(() =>
         {
-            Managers.UI.imgHealth.fillAmount = f / feverTime;
+            StartCoroutine(FeverMode());
+        }, 6);
+        
+        IEnumerator FeverMode()
+        {
+            playerCtrl.speed *= playerFeverSpeedMagnification;
+            isFeverTime = true;
 
-            yield return null;
+            backgroundCtrl.SetFever(true);
+            var pos = playerCtrl.transform.position; //TODO
+            pos.y = 0.1f;
+            playerCtrl.transform.position = pos;
+            playerCtrl.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeAll;
+            
+            for (float f = feverTime; f >= 0; f -= Time.deltaTime)
+            {
+                Managers.UI.imgHealth.fillAmount = f / feverTime;
+
+                yield return null;
+            }
+            
+            feverAnim.StartAnimation(() =>
+            {
+                EndFever();
+            }, 6);
         }
+    }
 
-        rig.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezeRotation;
-
-        feverAnim.StartAnimation();
-        yield return new WaitForSeconds(.42f);
-
+    private void EndFever()
+    {
+        playerCtrl.GetComponent<Rigidbody2D>().constraints =  RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezeRotation;
+        
         backgroundCtrl.SetFever(false);
         //TODO
 
         Managers.Sound.DefaultPlay();
 
         playerCtrl.speed /= playerFeverSpeedMagnification;
+        //TODO
 
         //obstancleSpawner.objectRemove();
         //obstancleSpawner.ObjectInstantiate();
@@ -282,7 +295,7 @@ public class GameManager : MonoBehaviour
 
         isFeverTime = false;
     }
-
+    
     public void ThrowObject(GameObject obj)
     {
         Managers.Sound.Play(EffectSoundClip.Attack);
@@ -302,6 +315,7 @@ public class GameManager : MonoBehaviour
     {
         PlayerPrefs.SetInt("StageLevel", stageLevel);
         PlayerPrefs.SetInt("HighScore", highScore);
+        PlayerPrefs.SetInt("Score", Score);
 
         PlayerPrefs.Save();
     }
@@ -310,6 +324,7 @@ public class GameManager : MonoBehaviour
     {
         stageLevel = PlayerPrefs.GetInt("StageLevel", 1);
         highScore = PlayerPrefs.GetInt("HighScore", 0);
+        Score = PlayerPrefs.GetInt("Score", 0);
     }
 
     private void OnApplicationQuit()

@@ -15,7 +15,7 @@ public class UIManager : MonoBehaviour
     {
         set
         {
-            value = Mathf.Min(combos.Length, value);
+            value = Mathf.Min(combos.Length - 1, value);
             imgCombo.gameObject.SetActive(value > 0);
 
             if (imgCombo.gameObject.activeSelf)
@@ -25,6 +25,7 @@ public class UIManager : MonoBehaviour
 
     public Text txtHighScore;
     public Text txtNowScore;
+    public Text txtStage;
     public Image imgHealth;
 
     [SerializeField] private Sprite[] combos;

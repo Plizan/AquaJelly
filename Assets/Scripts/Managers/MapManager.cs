@@ -25,7 +25,9 @@ public class MapManager : MonoBehaviour
     }
 
     [SerializeField] private GameObject firstFloor;
-    [SerializeField] private Material[] matBackground;
+    [SerializeField] private List<Material> matBackground;
+    [SerializeField] private Material matFloor;
+    [SerializeField] private BackgroundCtrl backgroundCtrl;
     [SerializeField] private int[] testLevel;
     
     private List<GameObject> floors = new List<GameObject>();
@@ -41,13 +43,17 @@ public class MapManager : MonoBehaviour
     {
         var maxLevel = Managers.Game.maxStageLevel;
 
-        textures = new Texture[maxLevel, matBackground.Length];
+        matBackground = new List<Material>();
+        matBackground.Add(matFloor);
+        matBackground.AddRange(backgroundCtrl.GetMatarials.Reverse().ToList());
+        
+        textures = new Texture[maxLevel, matBackground.Count];
 
         for (int i = 0; i < maxLevel; i++)
         {
             var textures = Resources.LoadAll<Texture>($"Image/Background/{i + 1}");
 
-            for (int j = 0; j < matBackground.Length; j++)
+            for (int j = 0; j < matBackground.Count; j++)
                 this.textures[i, j] = textures[j];
         }
     }
@@ -63,20 +69,23 @@ public class MapManager : MonoBehaviour
     {
         level = Mathf.Clamp(level, 1, Managers.Game.maxStageLevel);
 
-        for (int i = 0; i < matBackground.Length; i++)
+        for (int i = 0; i < matBackground.Count; i++)
             matBackground[i].mainTexture = textures[level - 1, i];
     }
 
-    public void SetLevel()
+    public void DeleteLevel()
     {
-        if (maps.Count > 0)
+        if (maps != null && maps.Count > 0)
         {
             foreach (var map in maps)
             {
                 Destroy(map.gameObject);
             }
         }
-
+    }
+    
+    public void SetLevel()
+    {
         maps = new List<GameObject>();
         
         var length = 7;
@@ -98,10 +107,9 @@ public class MapManager : MonoBehaviour
             var obj = Instantiate(firstFloor);
             obj.transform.position = new Vector3(length, 0, 0);
             maps.Add(obj);
-            length += 7;
             
             obj = Instantiate(firstFloor);
-            obj.transform.position = new Vector3(length, 0, 0);
+            obj.transform.position = new Vector3(length + 7, 0, 0);
             maps.Add(obj);
         }
         

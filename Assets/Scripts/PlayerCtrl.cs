@@ -143,7 +143,7 @@ public class PlayerCtrl : MonoBehaviour
         else if (collider.CompareTag("SpawnPoint"))
             //Managers.Game.obstancleSpawner.ObjectInstantiate();
         {
-            StartCoroutine(Managers.Game.GameStop());
+
         }
         else if (collider.CompareTag("ThrowObstacleSpawn"))
         {
@@ -172,6 +172,7 @@ public class PlayerCtrl : MonoBehaviour
             _rigidbody.velocity = Vector2.zero;
             transform.position = new Vector3(-0.0529999994f, -1.22099996f, -1f);
             spriteRenderer.color = Color.white;
+            spriteRenderer.sprite = runSprites[0];
             transform.localScale = Vector3.one;
         }
         
@@ -231,7 +232,10 @@ public class PlayerCtrl : MonoBehaviour
         {
             if (!Managers.Game.isFeverTime)
                 Health -= Time.deltaTime * dotDamage;
-
+            else
+                while (Managers.Game.isFeverTime)
+                    yield return null;
+            
             //bool isWait = false;
 
             if (Level > 0 && Health < maxHealth / (maxLevel - 1) * (Level - 1))
@@ -243,7 +247,7 @@ public class PlayerCtrl : MonoBehaviour
             {
                 Level++;
 
-                if (Level == maxLevel) yield return StartCoroutine(Managers.Game.FeverMode());
+                if (Level == maxLevel) Managers.Game.FeverMode();
 
                 //isWait = true;
             }
@@ -251,7 +255,9 @@ public class PlayerCtrl : MonoBehaviour
             if (Health <= 0)
             {
                 Managers.Game.stageLevel = 1;
-                StartCoroutine(Managers.Game.GameStop());
+                Managers.Game.Score = 0;
+                Managers.Game.GameStop();
+                yield break;
             }
 
             //if (isWait) yield return new WaitForSeconds(1);

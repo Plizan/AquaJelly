@@ -7,6 +7,18 @@ public class BackgroundCtrl : MonoBehaviour
 {
     [SerializeField] private Renderer[] renderers;
 
+    public Material[] GetMatarials { get
+    {
+        var mat = new Material[renderers.Length];
+        
+        for (int i = 0; i < mat.Length; i++)
+        {
+            mat[i] = renderers[i].material;
+        }
+
+        return mat;
+    }}
+    
     [SerializeField] private float difference = 0.7f;
 
     [HideInInspector] public float speed = 1;
