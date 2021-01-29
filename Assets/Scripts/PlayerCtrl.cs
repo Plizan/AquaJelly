@@ -26,11 +26,6 @@ public class PlayerCtrl : MonoBehaviour
 
     [SerializeField] private float[] levelSize;
 
-
-    private void Start()
-    {
-        spriteRenderer = GetComponent<SpriteRenderer>();
-    }
     public int Level
     {
         get => level;
@@ -40,7 +35,10 @@ public class PlayerCtrl : MonoBehaviour
 
             Mathf.Min(Managers.Game.maxLevel, value);
 
-            transform.DOScale(Vector3.one * levelSize[value], Mathf.Abs(level - value));
+            Debug.Log(levelSize[value]);
+
+            transform.DOKill();
+            transform.DOScale(Vector3.one * levelSize[value], Mathf.Abs(transform.localScale.magnitude - value));
 
             level = value;
         }
@@ -60,6 +58,11 @@ public class PlayerCtrl : MonoBehaviour
     {
         Level = level;
         Health = Managers.Game.maxHealth / (Managers.Game.maxLevel - 1) * level;
+    }
+
+    private void Start()
+    {
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     private Rigidbody2D _rigidbody;
@@ -254,9 +257,7 @@ public class PlayerCtrl : MonoBehaviour
 
             if (Health <= 0)
             {
-                Managers.Game.stageLevel = 1;
-                Managers.Game.Score = 0;
-                Managers.Game.GameStop();
+                Managers.Game.GameStop(true);
                 yield break;
             }
 
@@ -319,7 +320,7 @@ public class PlayerCtrl : MonoBehaviour
 
         isFirst = false;
         jumpCount++;
-        _rigidbody.velocity += Vector2.up * power;
+        _rigidbody.velocity = Vector2.up * power;
         Debug.Log("jump");
     }
 }

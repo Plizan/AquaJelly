@@ -1030,7 +1030,7 @@ MonoBehaviour:
   matBackground: []
   matFloor: {fileID: 2100000, guid: 769d1f2d85c87464cad048ef54dadd34, type: 2}
   backgroundCtrl: {fileID: 1050017553}
-  testLevel: 02000000
+  testLevel: 010000000100000001000000
   prefabMaps:
   - {fileID: 7160615775258088417, guid: a3c839adf0eef4f43a5bda83cd95ccb5, type: 3}
   - {fileID: 7160615775258088417, guid: aee09fc3e64274d459d8a5acd566d252, type: 3}

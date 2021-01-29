@@ -41,6 +41,8 @@ public class GameManager : MonoBehaviour
 
     public int secondScore;
 
+    private bool isPlaying;
+    
     [SerializeField] private int score;
     [SerializeField] private int highScore;
     public int Score
@@ -101,6 +103,12 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         DataLoad();
+
+        if (isPlaying)
+        {
+            stageLevel = 1;
+            Score = 0;
+        }
     }
 
     private void Start()
@@ -192,6 +200,7 @@ public class GameManager : MonoBehaviour
         Camera.main.DOOrthoSize(1.777778f, .5f).SetEase(Ease.InSine);
         yield return new WaitForSeconds(.4f);
 
+        isPlaying = true;
         playerCtrl.isJump = true;
         playerCtrl.SetLevelOrHealth(startLevel);
         //obstancleSpawner.ObjectInstantiate();
@@ -220,24 +229,30 @@ public class GameManager : MonoBehaviour
 
         stageLevel++;
         
-        GameStop();
+        GameStop(false);
     }
 
-    public void GameStop()
+    public void GameStop(bool isScoreClear)
     {
         feverAnim.StartAnimation(() =>
         {
-            EndFever();
-            
-            Initialization(ProgressType.Lobby);
-            
-            Managers.Map.SetFloors(stageLevel);
+            isPlaying = false;
 
-            playerCtrl.Initialization(ProgressType);
-        
             StopAllCoroutines();
             obstancleSpawner.objectRemove();
+            
+            EndFever();
 
+            if (isScoreClear)
+            {
+                Score = 0;
+                stageLevel = 1;
+            }
+            Initialization(ProgressType.Lobby);
+            playerCtrl.Initialization(ProgressType);
+            
+            // Managers.Map.SetFloors(stageLevel);
+            
             isClear = false;
         }, 6);
     }
@@ -316,15 +331,19 @@ public class GameManager : MonoBehaviour
         PlayerPrefs.SetInt("StageLevel", stageLevel);
         PlayerPrefs.SetInt("HighScore", highScore);
         PlayerPrefs.SetInt("Score", Score);
+        PlayerPrefs.SetInt("IsPlaying", isPlaying ? 1 : 0);
 
         PlayerPrefs.Save();
     }
 
     public void DataLoad()
     {
-        stageLevel = PlayerPrefs.GetInt("StageLevel", 1);
         highScore = PlayerPrefs.GetInt("HighScore", 0);
+        
+        stageLevel = PlayerPrefs.GetInt("StageLevel", 1);
         Score = PlayerPrefs.GetInt("Score", 0);
+        
+        isPlaying = PlayerPrefs.GetInt("IsPlaying", 0) == 1;
     }
 
     private void OnApplicationQuit()
